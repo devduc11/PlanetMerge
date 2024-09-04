@@ -1,30 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GameController : BaseMonoBehaviour
+public class GameUi : BaseUI
 {
+    public static GameUi Instance;
+    [SerializeField]
+    private Image imageNextBall;
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
     }
     #endregion
-    public static GameController Instance;
-    public bool isPauseGame;
 
     protected override void Awake()
     {
         base.Awake();
         Instance = this;
-
     }
 
-    protected override void Start()
+    protected override UIName GetName()
     {
-        base.Start();
-        isPauseGame = true;
-        UIManager.Instance.ShowUI(UIName.GAME_UI);
-        // UIManager.Instance.HideUI(UIName.GAME_UI);
+        return UIName.GAME_UI;
+    }
+
+    public Image GetImageNextBall()
+    {
+        return imageNextBall;
     }
 }

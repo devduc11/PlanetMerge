@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum UIName
 {
-    HOME_UI
+    HOME_UI, GAME_UI
 }
 
 public abstract class BaseUI : BaseMonoBehaviour
