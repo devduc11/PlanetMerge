@@ -1,20 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CloudController : BaseMonoBehaviour
 {
+    public static CloudController Instance;
     [SerializeField]
     private Transform ballClampPos1;
     [SerializeField]
     private Transform ballClampPos2;
+    [SerializeField]
+    private Transform posCloud;
     #region LoadComponents
     protected override void LoadComponents()
     {
         base.LoadComponents();
+        ballClampPos1 = GameObject.Find("BallClampPos1").transform;
+        ballClampPos2 = GameObject.Find("BallClampPos2").transform;
+        posCloud = GameObject.Find("PosCloud").transform;
     }
     #endregion
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Instance = this;
+
+    }
+
+    public void CheckPosStart(BallController ballController)
+    {
+        ballController.gameObject.SetActive(false);
+        transform.DOMove(posCloud.position, 0.2f)
+        .OnComplete(() =>
+        {
+            ballController.transform.position = transform.position;
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                ballController.gameObject.SetActive(true);
+                ballController.CheckSizeItemsAndSprites();
+            });
+        });
+    }
 
     protected override void Update()
     {
