@@ -26,10 +26,6 @@ public class BallController : BaseMonoBehaviour
     [SerializeField]
     public int idBallNext;
     [SerializeField]
-    private int minBall;
-    [SerializeField]
-    private int maxBall;
-    [SerializeField]
     public int idShop;
     [SerializeField]
     private int idPercentages;
@@ -75,6 +71,7 @@ public class BallController : BaseMonoBehaviour
         {
             lineController.CheckEnabledLine(false);
             GameController.Instance.isPauseGame = false;
+
             CloudController.Instance.CheckPosStart(this);
             CheckBallSpawner();
         }
@@ -122,12 +119,11 @@ public class BallController : BaseMonoBehaviour
         float percent = UnityEngine.Random.Range(0, 100f);
         // print($"percent: {percent}");
         int NumberOfFruits = ballPercentageList.Percentages[idPercentages].NumberOfFruits;
-        // if (maxItems > NumberOfFruits)
-        // {
-        //     idPercentages++;
-        //     NumberOfFruits = ballPercentageList.Percentages[idPercentages].NumberOfFruits;
-        // }
-        // print($"NumberOfFruits: {NumberOfFruits}");
+        if (GameController.Instance.maxIdBall > NumberOfFruits)
+        {
+            idPercentages++;
+            NumberOfFruits = ballPercentageList.Percentages[idPercentages].NumberOfFruits;
+        }
 
         float cumulativePercent = 0f;
         for (int i = 0; i < ballPercentageList.Percentages[idPercentages].Percentages.Count; i++)

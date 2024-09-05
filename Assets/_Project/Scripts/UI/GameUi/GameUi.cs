@@ -41,6 +41,7 @@ public class GameUI : BaseUI
 
     private void CheckNextBallImage(BallController ballController)
     {
+        nextBallImage.transform.localScale = Vector3.zero;
         nextBallImage.transform.DOScale(0f, 0.2f)
         .OnComplete(() =>
         {

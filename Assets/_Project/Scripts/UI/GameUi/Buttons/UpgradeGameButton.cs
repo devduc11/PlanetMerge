@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class BombGameButton : BaseButton
+public class UpgradeGameButton : BaseButton
 {
-    public static BombGameButton Instance;
-    [SerializeField, GetComponentInChildren("Text")]
-    protected TextMeshProUGUI text;
-    [SerializeField]
-    private int sumBomb;
+    public static UpgradeGameButton Instance;
     [SerializeField]
     private FeatureController featureController;
     [SerializeField]
-    private bool isMinusBomb;
+    private int sumUpgrade;
+    [SerializeField, GetComponentInChildren("Text")]
+    protected TextMeshProUGUI text;
+    [SerializeField]
+    private bool isMinusUpgrade;
 
     #region LoadComponents
     protected override void LoadComponents()
@@ -44,47 +44,44 @@ public class BombGameButton : BaseButton
 
     protected override void OnClick()
     {
-        CheckBnt();
+        CheckBtn();
     }
 
-    public void CheckBnt()
+    public void CheckBtn()
     {
-        if (BallSpawner.Instance.transform.childCount == 0 || sumBomb <= 0 || BallSpawner.Instance.balls.Count == 0 || !featureController.isPauseFeature) return;
-        // print("CheckBomb");
+        if (BallSpawner.Instance.transform.childCount == 0 || sumUpgrade <= 0 || BallSpawner.Instance.balls.Count == 0 || !featureController.isPauseFeature) return;
         for (int i = 0; i < BallSpawner.Instance.balls.Count; i++)
         {
             Ball ball = BallSpawner.Instance.balls[i];
-            ball.isBomb = true;
+            ball.isUpgrade = true;
         }
 
-        isMinusBomb = true;
+        isMinusUpgrade = true;
         featureController.isPauseFeature = false;
         GameController.Instance.isPauseGame = false;
-        if (isMinusBomb)
+        if (isMinusUpgrade)
         {
-            sumBomb--;
-            isMinusBomb = false;
+            sumUpgrade--;
             UpText();
+            isMinusUpgrade = false;
         }
     }
 
     public void UpText()
     {
-        text.text = $"{sumBomb}";
+        text.text = $"{sumUpgrade}";
     }
 
-    public void CheckBomb(Ball ball)
+    public void CheckUpgrade(Ball ball)
     {
-        ball.transform.DOScale(0, 0.25f).SetEase(Ease.InBack).OnComplete(() =>
+        ball.CheckSpriteBallMerge(() =>
         {
-            ball.gameObject.SetActive(false);
-            GameController.Instance.HideBall(ball);
             featureController.isPauseFeature = true;
             GameController.Instance.isPauseGame = true;
             for (int i = 0; i < BallSpawner.Instance.transform.childCount; i++)
             {
                 Ball ball = BallSpawner.Instance.transform.GetChild(i).GetComponent<Ball>();
-                ball.isBomb = false;
+                ball.isUpgrade = false;
             }
         });
     }

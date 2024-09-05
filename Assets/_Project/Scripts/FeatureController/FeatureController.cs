@@ -23,4 +23,5 @@ public class FeatureController : BaseMonoBehaviour
     {
         isPauseFeature = isPause;
     }
+
 }

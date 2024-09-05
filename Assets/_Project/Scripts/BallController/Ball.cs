@@ -23,7 +23,7 @@ public class Ball : BaseMonoBehaviour
     [SerializeField]
     public bool isBomb;
     [SerializeField]
-    private bool isUpgrade;
+    public bool isUpgrade;
     [SerializeField]
     private int coin;
     public static event Action<Ball> OnCollisionEnter;
@@ -43,14 +43,18 @@ public class Ball : BaseMonoBehaviour
         transform.localScale = new Vector3(sizeBall.ListSize[this.idBall], sizeBall.ListSize[this.idBall]);
     }
 
-    public void CheckSpriteBallMerge()
+    public void CheckSpriteBallMerge(Action action = default(Action))
     {
+        transform.localScale = Vector3.zero;
+        transform.rotation = Quaternion.identity;
         idBall++;
         spriteRenderer.sprite = spriteBall.Sprites[idShop].Sprites[idBall];
         transform.DOScale(sizeBall.ListSize[idBall], 0.25f)
+        .SetEase(Ease.InBack)
         .SetDelay(0.08f)
         .OnComplete(() =>
         {
+            action?.Invoke();
         });
         // transform.localScale = new Vector3(sizeBall.ListSize[idBall], sizeBall.ListSize[idBall]);
     }
@@ -71,10 +75,12 @@ public class Ball : BaseMonoBehaviour
                 // print("okoko");
                 OnCollisionEnter?.Invoke(this);
             }
+            GameController.Instance.CheckIdBallMax();
         }
         else if (other.gameObject.CompareTag("Ground"))
         {
             isDrop = true;
+            GameController.Instance.CheckIdBallMax();
         }
     }
 
@@ -83,15 +89,21 @@ public class Ball : BaseMonoBehaviour
         if (isBomb)
         {
             print("isBomb");
-            // BombGameButton.Instance.CheckBomb();
-            // Feature.Instance.CheckBomb(this);
+            BombGameButton.Instance.CheckBomb(this);
         };
         if (isUpgrade)
         {
             print("Upgrade");
-            // Feature.Instance.CheckUpgrade(this);
+            UpgradeGameButton.Instance.CheckUpgrade(this);
         };
     }
+    public void CheckForce()
+    {
+        float posX = UnityEngine.Random.Range(-100f, 100f);
+        float posY = UnityEngine.Random.Range(100f, 300f);
 
+        Vector2 posRanDom = new Vector2(posX, posY);
+        rb.AddForce(posRanDom);
+    }
 
 }

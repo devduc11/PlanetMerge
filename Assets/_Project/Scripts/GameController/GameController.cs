@@ -14,6 +14,9 @@ public class GameController : BaseMonoBehaviour
     private Ball ball1, ball2;
     private int count;
     private int countMerge;
+    public int maxIdBall;
+    private int biggest = int.MinValue;
+
     public bool isPauseGame;
 
     protected override void Awake()
@@ -27,6 +30,7 @@ public class GameController : BaseMonoBehaviour
     {
         base.Start();
         isPauseGame = true;
+        // UIManager.Instance.ShowUI(UIName.GAME_UI);
         // UIManager.Instance.HideUI(UIName.GAME_UI);
     }
 
@@ -60,16 +64,15 @@ public class GameController : BaseMonoBehaviour
             countMerge++;
             // Debug.Log($"merge {countMerge}");
             Vector3 posMiddle = (ball1.transform.position + ball2.transform.position) / 2;
-            print(posMiddle);
+            // print(posMiddle);
             ball1.gameObject.SetActive(false);
             ball2.gameObject.SetActive(false);
 
             HideBall(ball2);
             ball1.gameObject.SetActive(true);
-            ball1.transform.localScale = Vector3.zero;
             ball1.transform.position = posMiddle;
-            ball1.transform.rotation = Quaternion.identity;
             ball1.CheckSpriteBallMerge();
+
             count = 0;
         }
     }
@@ -77,6 +80,19 @@ public class GameController : BaseMonoBehaviour
     public void HideBall(Ball ball)
     {
         BallSpawner.Instance.Despawn(ball);
+    }
+
+    public void CheckIdBallMax()
+    {
+        foreach (Ball ball in BallSpawner.Instance.balls)
+        {
+            if (ball.idBall > biggest)
+            {
+                biggest = ball.idBall;
+            }
+        }
+        // Debug.Log($"ID Ball lớn nhất: {biggest}");
+        maxIdBall = biggest;
     }
 
 
